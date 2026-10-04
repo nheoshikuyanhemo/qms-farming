@@ -35,7 +35,7 @@ Install dependencies:
 
 1. Clone the repo
 
-       git clone <your-repo-url>
+       git clone https://github.com/nheoshikuyanhemo/qms-farming.git
        cd qms-farming
 
 2. Copy environment template
