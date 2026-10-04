@@ -16,6 +16,7 @@ This bot interacts with blockchain smart contracts and handles a private key. Us
 - **Add liquidity** to supported pools (batch mode)
 - **Remove liquidity** - NOT YET IMPLEMENTED (planned for a future release)
 - **Check balances** for all configured tokens
+- **Check failed transactions** via `check_tx.py` (wallet address can be overridden via CLI argument or by editing `WALLET_ADDRESS`)
 - Human-readable amounts (0.01, 0.1, 1, 11, etc.)
 - All config loaded from `.env`
 
@@ -93,7 +94,7 @@ This feature is not yet implemented. It is planned for a future release.
 ### 6. Exit
 Quit the bot.
 
-Note: Menu numbering may vary depending on the current build of farming_bot.py.
+Note: Menu numbering may vary depending on the current build of `farming_bot.py`.
 
 ## Example Session
 
@@ -104,12 +105,45 @@ Note: Menu numbering may vary depending on the current build of farming_bot.py.
     5. REMOVE LIQUIDITY   (not yet implemented)
     6. Exit
 
+## Checking Transaction Status (check_tx.py)
+
+The `check_tx.py` script searches for **failed addLiquidity transactions** sent from a specific wallet to the router.
+
+### Usage
+
+    # Use the default wallet defined inside check_tx.py
+    python3 check_tx.py
+
+    # Check a different wallet (override via argument)
+    python3 check_tx.py 0xWalletAddressHere
+
+    # Limit how many blocks are scanned backwards
+    python3 check_tx.py 0xWalletAddressHere --limit=5000
+
+### Changing the Wallet Address
+
+By default, the wallet address that is checked comes from the `WALLET_ADDRESS` variable inside `check_tx.py`.
+
+Two ways to change it:
+
+1. **Quick way (no file edit):** pass the wallet as the first CLI argument
+
+       python3 check_tx.py 0xb50b87Cca4FD3cC57Bf253507aBF09cEDE3072a1
+
+2. **Permanent way:** edit `check_tx.py` and find the line:
+
+       WALLET_ADDRESS = "0xb50b87Cca4FD3cC57Bf253507aBF09cEDE3072a1"
+
+   Replace it with the wallet you want to inspect.
+
+> **Note:** `ROUTER_ADDRESS` and `RPC_URL` are read automatically from `.env`, so you do not need to edit them unless you change the router or RPC endpoint.
+
 ## Project Structure
 
     qms-farming/
     |-- farming_bot.py    # Main interactive bot
     |-- qms_client.py     # Web3 client wrapper
-    |-- check_tx.py       # Transaction status checker
+    |-- check_tx.py       # Failed transaction checker (addLiquidity)
     |-- demo.py           # Demo / testing script
     |-- .env.example      # Environment template (safe to commit)
     |-- .gitignore        # Ignores .env, __pycache__, etc.
@@ -121,6 +155,7 @@ Note: Menu numbering may vary depending on the current build of farming_bot.py.
 - [x] Swap tokens
 - [x] Add liquidity
 - [x] Check balances
+- [x] Check failed transactions (`check_tx.py`)
 - [ ] Remove liquidity - planned
 - [ ] Portfolio summary / PnL
 - [ ] Config file for pool presets
